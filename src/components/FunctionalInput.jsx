@@ -10,6 +10,11 @@ const FunctionalInput = ({ name }) => {
   const [todos, setTodos] = useState(['Just some demo tasks', 'As an example']);
   const [inputVal, setInputVal] = useState('');
 
+function deleteToDo(todo){
+  const newTodos = todos.filter((td) => td  !== todo);
+  setTodos(newTodos);
+}
+
   const handleInputChange = (e) => {
     setInputVal(e.target.value);
   };
@@ -39,7 +44,7 @@ const FunctionalInput = ({ name }) => {
       {/* The list of all the To-Do's, displayed */}
       <ul>
         {todos.map((todo) => (
-          <li key={todo}>{todo}</li>
+          <li key={todo}>{todo}<button onClick={()=>deleteToDo(todo)}>test</button></li>
         ))}
       </ul>
     </section>
