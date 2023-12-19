@@ -1,17 +1,20 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import ClassCount from './ClassCount';
 
 class ClassInput extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      todos: ['Just some demo tasks', 'As an example'],
+      todos: [{todo:'Just some demo tasks', isEdit:false}, {todo:'As an example', isEdit:false}],
       inputVal: '',
     };
     this.deleteToDo = this.deleteToDo.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.edit = this.edit.bind(this);
+    this.onEditChange = this.onEditChange.bind(this);
   }
 
   deleteToDo(todo){
@@ -30,8 +33,46 @@ class ClassInput extends Component {
   handleSubmit(e) {
     e.preventDefault();
     this.setState((state) => ({
-      todos: state.todos.concat(state.inputVal),
+      todos: state.todos.concat({todo:state.inputVal,isEdit:false}),
       inputVal: '',
+    }));
+  }
+
+  edit(todo){
+    
+    this.setState((state) => ({
+      todos: state.todos.map((td => {
+        if(todo !== td)
+        return td;
+        else{
+          return {todo:todo.todo, isEdit:true, editVal:todo}
+        }
+      })),
+    }
+    ))
+  }
+
+  onEditChange(e,todo){
+    this.setState((state) => ({
+      todos: state.todos.map((td => {
+        if(todo !== td)
+        return td;
+        else{
+          return {todo:todo.todo, isEdit:true, editVal:e.target.value}
+        }
+      })),
+    }));
+  }
+
+  onResubmit(todo){
+    this.setState((state) => ({
+      todos: state.todos.map((td => {
+        if(todo !== td)
+        return td;
+        else{
+          return {todo:todo.editVal, isEdit:false, editVal:''}
+        }
+      })),
     }));
   }
 
@@ -56,9 +97,13 @@ class ClassInput extends Component {
         {/* The list of all the To-Do's, displayed */}
         <ul>
           {this.state.todos.map((todo) => (
-            <li key={todo}>{todo} <button onClick={() => this.deleteToDo(todo)}>Delete</button></li>
+            <li key={todo.todo}> {todo.isEdit? <input defaultValue={todo.todo} onChange={(e) => this.onEditChange(e,todo)}/> : todo.todo}
+            {todo.isEdit ? <button onClick={() => this.onResubmit(todo)}>Resubmit</button> : <button onClick={() => this.edit(todo)}>Edit</button> }
+            <button onClick={() => this.deleteToDo(todo)}>Delete</button>
+            </li>
           ))}
         </ul>
+        <ClassCount todos={this.state.todos} />
       </section>
     );
   }

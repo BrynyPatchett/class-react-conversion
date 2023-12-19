@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ClassCount from './ClassCount';
+
 
 // eslint-disable-next-line react/function-component-definition, react/prop-types
 const FunctionalInput = ({ name }) => {
@@ -21,7 +23,7 @@ function deleteToDo(todo){
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTodos((todo) => [...todo, inputVal]);
+    setTodos([...todos, inputVal]);
     setInputVal('');
   };
 
@@ -47,6 +49,7 @@ function deleteToDo(todo){
           <li key={todo}>{todo}<button onClick={()=>deleteToDo(todo)}>test</button></li>
         ))}
       </ul>
+      <ClassCount todos={todos} />
     </section>
   );
 };
